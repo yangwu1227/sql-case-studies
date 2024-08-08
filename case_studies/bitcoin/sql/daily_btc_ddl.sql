@@ -7,8 +7,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS trading.daily_btc (
   adjusted_close_price DOUBLE,
   volume DOUBLE
 )
-COMMENT 'Daily Bitcoin trading data'
-ROW FORMAT DELIMITED
+COMMENT 'Daily Bitcoin trading data containing the open, high, low, close, adjusted close prices, and volume'
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/trading/daily_btc/'
 TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');

@@ -5,8 +5,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS data_bank.customer_nodes (
   start_date TIMESTAMP,
   end_date TIMESTAMP
 )
-COMMENT 'Customer nodes table'
-ROW FORMAT DELIMITED
+COMMENT 'The customer nodes table stores the customer IDs, region IDs, node IDs, and the start and end dates that the customer was assigned to the node'
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/data_bank/customer_nodes/'
 TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');

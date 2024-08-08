@@ -3,8 +3,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS dannys_diner.menu (
   product_name STRING,
   price DOUBLE
 )
-COMMENT 'Menu details'
-ROW FORMAT DELIMITED
+COMMENT 'The menu table maps the product IDs to the actual product names and prices'
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/dannys_diner/menu/'
-TBLPROPERTIES ('has_encrypted_data'='false', 'classification'='parquet', 'skip.header.line.count'='1');
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');

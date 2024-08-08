@@ -3,8 +3,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS dannys_diner.sales (
   order_date TIMESTAMP,
   product_id INT
 )
-COMMENT 'Sales line items'
-ROW FORMAT DELIMITED
+COMMENT 'The sales table captures all customer ID level purchases with order dates and product IDs'
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/dannys_diner/sales/'
-TBLPROPERTIES ('has_encrypted_data'='false', 'classification'='parquet', 'skip.header.line.count'='1');
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');

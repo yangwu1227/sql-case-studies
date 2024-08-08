@@ -41,7 +41,7 @@ The needed permissions can be encapsulated in a [boto3 session](https://boto3.am
 
 #### S3 Bucket
 
-The `data` parquet files for the case studies must be stored in an S3 bucket. All DDL queires are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 urls**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the the console.
+The `data` parquet files for the case studies must be stored in an S3 bucket. All DDL queires are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 urls**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the console.
 
 ```bash
 # Create a bucket
@@ -50,7 +50,7 @@ $ aws s3api create-bucket --bucket sql-case-studies --profile profile-name
 $ aws s3 cp data/ s3://sql-case-studies/ --recursive --profile profile-name 
 ```
 
-Optionally, query results can configured to be stored in the non-default (i.e., `aws-athena-query-results-accountid-region`) s3 bucket. The query result S3 url can be stored as an environment variable, e.g. `ATHENA_S3_OUTPUT=s3://bucket-name/path/to/output/`, which can then be passed as the `s3_output` argument to the `Athena` class constructor.
+Optionally, query results can configured to be stored in a non-default (i.e., `aws-athena-query-results-accountid-region`) s3 bucket. The query result S3 url can be stored as an environment variable, e.g. `ATHENA_S3_OUTPUT=s3://bucket-name/path/to/output/`, which can then be passed as the `s3_output` argument to the `Athena` class constructor. The client creates the default bucket if the `s3_output` argument is not provided.
 
 ```python
 import os 

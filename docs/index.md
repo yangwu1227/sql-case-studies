@@ -1,13 +1,13 @@
 ## Danny's Diner
 
-### DDL
-
 ### ERD
 
 <figure markdown="span">
   ![Danny's Diner](assets/entity_relationship_diagrams/dannys_diner.png){ width="100%" }
   <figcaption>Danny's Diner</figcaption>
 </figure>
+
+### DDL
 
 #### Members
 

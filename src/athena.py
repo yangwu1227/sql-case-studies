@@ -106,7 +106,7 @@ class Athena(object):
         None
         """
         if query.count(";") != 1:
-            raise AthenaQueryError("Query must contain exactly one SQL statement")
+            raise AthenaQueryError("Query must contain exactly one SQL statement with a single semicolon at the end")
 
     def _check_query(self, query: str, expected_start: Union[Sequence[str], str], error_message: str) -> None:
         """
@@ -235,7 +235,7 @@ class Athena(object):
         >>>       )
         >>>       STORED AS PARQUET
         >>>       LOCATION 's3://bucket-name/path/to/data/'
-        >>>       TBLPROPERTIES ('parquet.compress'='SNAPPY')
+        >>>       TBLPROPERTIES ('parquet.compress'='SNAPPY');
         >>>       '''
         >>> athena.create_table(database='my_database', query=ddl, wait=True)
         """
@@ -289,7 +289,7 @@ class Athena(object):
         --------
         >>> ddl = '''
         >>>       CREATE OR REPLACE VIEW my_database.my_view AS
-        >>>       SELECT * FROM my_database.my_table
+        >>>       SELECT * FROM my_database.my_table;
         >>>       '''
         >>> athena.create_view(database='my_database', query=ddl, wait=True)
         """
@@ -349,7 +349,7 @@ class Athena(object):
         --------
         >>> query = '''
         >>>         SELECT * FROM my_database.my_table
-        >>>         WHERE date >= '2021-01-01'
+        >>>         WHERE date >= DATE '2021-01-01';
         >>>         '''
         >>> athena.query(database='my_database', query=query, ctas_approach=False)
         """

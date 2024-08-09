@@ -59,4 +59,4 @@ s3_output = os.getenv('ATHENA_S3_OUTPUT', '')
 
 ### Jupyter Notebook
 
-Each case study folder contains a `notebook` directory containing Jupyter notebooks that can be used to run SQL queries.
+Each case study folder contains a `notebooks` directory containing Jupyter notebooks that can be used to run SQL queries.

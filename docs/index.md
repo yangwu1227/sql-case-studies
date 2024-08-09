@@ -2,6 +2,13 @@
 
 ### DDL
 
+### ERD
+
+<figure markdown="span">
+  ![Danny's Diner](assets/entity_relationship_diagrams/dannys_diner.png){ width="100%" }
+  <figcaption>Danny's Diner</figcaption>
+</figure>
+
 #### Members
 
 ```sql
@@ -46,6 +53,13 @@ TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
 ---
 
 ## Data Bank
+
+### ERD
+
+<figure markdown="span">
+  ![Data Bank](assets/entity_relationship_diagrams/data_bank.png){ width="100%" }
+  <figcaption>Data Bank</figcaption>
+</figure>
 
 ### DDL
 
@@ -97,6 +111,13 @@ TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
 
 ## Trading
 
+### ERD
+
+<figure markdown="span">
+  ![Daily Bitcoin Prices](assets/entity_relationship_diagrams/daily_btc.png){ width="30%" }
+  <figcaption>Daily Bitcoin Prices</figcaption>
+</figure>
+
 ### DDL 
 
 #### Daily Bitcoin Price
@@ -120,6 +141,13 @@ TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
 ---
 
 ## Clique Bait
+
+### ERD
+
+<figure markdown="span">
+  ![Clique Bait](assets/entity_relationship_diagrams/clique_bait.png){ width="100%" }
+  <figcaption>Clique Bait</figcaption>
+</figure>
 
 ### DDL
 

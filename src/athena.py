@@ -153,7 +153,7 @@ class Athena(object):
                 database=database,
                 s3_output=self.s3_output,
                 boto3_session=self.boto3_session,
-                **{k: v for k, v in kwargs.items() if k not in {'boto3_session', 's3_output'}}
+                **{k: v for k, v in kwargs.items() if k not in ['boto3_session', 's3_output']}
             )
             logger.info(f"Query executed successfully")
             return response
@@ -243,6 +243,66 @@ class Athena(object):
         self._check_single_statement(query)
         self._check_query(query, "CREATE EXTERNAL TABLE", "Query is invalid; please use CREATE EXTERNAL TABLE to create a table")
         self._execute_query(query=query, database=database, **kwargs)
+
+    def create_ctas_table(self, database: str, query: str, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Create a table in Athena using the Create Table As Select (CTAS) approach. Additional arguments can be passed to the CTAS 
+        query; the most important arguments are typically:
+
+        * `ctas_table` Optional[str]: The name of the CTAS table. If None, a name with a random string is used.
+
+        * `ctas_database` Optional[str]: The name of the database where the CTAS table will be created. If None, `database` is used.
+
+        * `s3_coutput` Optional[str]: The S3 path where the CTAS table will be stored. If None, `s3_output` attribute of the current instance is used. This may not be
+            desirable if the CTAS table is somewhat permanent and you want to store it in a different location than the query results.
+
+        * `storage_format` Optional[str]: The storage format for the CTAS query results, such as ORC, PARQUET, AVRO, JSON, or TEXTFILE. PARQUET by default.
+
+        * `write_compression` Optional[str]: The compression type to use for any storage format that allows compression to be specified.
+
+        * `partition_info` Optional[List[str]]: A list of columns by which the CTAS table will be partitioned.
+
+        See `awswrangler.athena.create_ctas_table` for more details. 
+
+        Parameters
+        ----------
+        database: str
+            The name of the database to create the table in.
+        query: str
+            The query to create the table without the CREATE TABLE statement.
+        **kwargs: Dict[str, Any]
+            Additional arguments passed to `awswrangler.athena.create_ctas_table`.
+
+        Returns
+        -------
+        Dict[str, Union[str, awswrangler.athena._utils._QueryMetadata]]
+            A dictionary with the the CTAS database and table names. If wait is False, the query ID is included, otherwise a Query metadata object is added instead.
+
+        Examples
+        --------
+        >>> query = '''
+        >>>         SELECT * FROM my_database.my_table
+        >>>         WHERE date >= DATE '2021-01-01';
+        >>>         '''
+        >>> athena.create_ctas_table(
+        >>>            database='my_database', 
+        >>>            query=query,
+        >>>            ctas_table='my_ctas_table',
+        >>>            wait=True,
+        >>>            storage_format='PARQUET',
+        >>>            write_compression='snappy',
+        >>>            partition_info=['date']
+        >>>        )
+        """
+        self._check_valid_identifier(database)
+        self._check_single_statement(query)
+        return wr.athena.create_ctas_table(
+            sql=query,
+            database=database,
+            s3_output=self.s3_output if 's3_output' not in kwargs else kwargs['s3_output'],
+            boto3_session=self.boto3_session,
+            **{k: v for k,v in kwargs.items() if k not in ['boto3_session', 's3_output']}
+        )
 
     def drop_table(self, database: str, table: str, **kwargs: Dict[str, Any]) -> None:
         """
@@ -361,5 +421,5 @@ class Athena(object):
             ctas_approach=ctas_approach,
             s3_output=self.s3_output,
             boto3_session=self.boto3_session,
-            **{k: v for k,v in kwargs.items() if k not in {'boto3_session', 's3_output', 'ctas_approach'}}
+            **{k: v for k,v in kwargs.items() if k not in ['boto3_session', 's3_output', 'ctas_approach']}
         )

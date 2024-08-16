@@ -244,7 +244,7 @@ class Athena(object):
         self._check_query(query, "CREATE EXTERNAL TABLE", "Query is invalid; please use CREATE EXTERNAL TABLE to create a table")
         self._execute_query(query=query, database=database, **kwargs)
 
-    def create_ctas_table(self, database: str, query: str, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def create_ctas_table(self, database: str, query: str, **kwargs: Any) -> Dict[str, Any]:
         """
         Create a table in Athena using the Create Table As Select (CTAS) approach. Additional arguments can be passed to the CTAS 
         query; the most important arguments are typically:

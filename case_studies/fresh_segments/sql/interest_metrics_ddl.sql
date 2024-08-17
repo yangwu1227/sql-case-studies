@@ -7,6 +7,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS fresh_segments.interest_metrics (
   index_value DOUBLE COMMENT 'Index value indicating how much higher the composition value is compared to the average composition value for all Fresh Segments clients’ customers for this interest in the same month (e.g., 6.19 means 6.19x the average)',
   ranking INT COMMENT 'Ranking of the interest based on the index value in the given month year (e.g., 1 for the highest index value)',
   percentile_ranking DOUBLE COMMENT 'Percentile ranking of the interest based on its index value, indicating its position relative to other interests in the same month year (e.g., 99.86 means it is in the top 0.14%)'
+)
 COMMENT "The interest metrics table represents the performance of specific interests based on the client's customer base"
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/fresh_segments/interest_metrics/'

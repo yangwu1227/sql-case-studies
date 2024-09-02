@@ -2,7 +2,7 @@ from typing import Optional
 import boto3
 from botocore.exceptions import NoRegionError, NoCredentialsError
 
-def create_session(profile_name: str, role_arn: Optional[str] = None, duration_seconds: Optional[int] = 43200) -> boto3.Session:
+def create_session(profile_name: str, role_arn: Optional[str] = None, duration_seconds: Optional[int] = 3600) -> boto3.Session:
     """
     Create a boto3 session with the provided profile name. If an AWS role ARN is provided, the session will assume the role. There are two options for providing 
     credentials:
@@ -25,7 +25,7 @@ def create_session(profile_name: str, role_arn: Optional[str] = None, duration_s
     role_arn: Optional[str]
         The AWS role ARN to assume. The default is None.
     duration_seconds: Optional[int]
-        The duration in seconds for which the credentials will be valid. The default is 43200 seconds (12 hours).
+        The duration in seconds for which the credentials will be valid. The default is 3600 seconds (1 hour).
 
     Returns
     -------

@@ -1,6 +1,8 @@
 from typing import Optional
+
 import boto3
-from botocore.exceptions import NoRegionError, NoCredentialsError
+from botocore.exceptions import NoCredentialsError, NoRegionError
+
 
 def create_session(profile_name: str, role_arn: Optional[str] = None, duration_seconds: Optional[int] = 3600) -> boto3.Session:
     """

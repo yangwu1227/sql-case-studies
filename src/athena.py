@@ -1,11 +1,11 @@
-import logging 
+import logging
 import sys
-from re import match, IGNORECASE
-from typing import Any, Dict, Sequence, Union, Optional
+from re import IGNORECASE, match
+from typing import Any, Dict, Optional, Sequence, Union
 
-import boto3 
-import pandas as pd
 import awswrangler as wr
+import boto3
+import pandas as pd
 
 logger = logging.getLogger(name='athena')
 logger.setLevel(logging.INFO)

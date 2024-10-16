@@ -20,6 +20,11 @@ mkdocs-material = ">=9.5.31"
 mkdocs = ">=1.6.0"
 mkdocstrings = {version = ">=0.25.2", extras = ["python"]}
 
+[tool.poetry.group.lint-fmt.dependencies]
+mypy = ">=1.12.0"
+black = ">=24.10.0"
+isort = ">=5.13.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

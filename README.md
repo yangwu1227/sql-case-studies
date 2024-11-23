@@ -22,15 +22,10 @@ $ docker compose down
 
 ### Virtual Environment
 
-Create a virtual environment with a preferred tool, e.g. [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html), [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html), [pipenv](https://pipenv.pypa.io/en/latest/#install-pipenv-today), [poetry](https://python-poetry.org/docs/#installation), etc., and install the required packages listed under the `tool.poetry.dependencies` section in the `pyproject.toml` file. 
-
-For example, with [`poetry` & `conda`](https://python-poetry.org/docs/basic-usage/#using-your-virtual-environment), this can be done as follows:
+The project manager used in this project is [uv](https://docs.astral.sh/uv/):
 
 ```bash
-$ yes | conda create --name sql_case_studies python=3.11
-$ conda activate sql_case_studies
-# Poetry detects and respects the activated conda environment
-$ poetry install --without docs
+$ uv sync --frozen
 ```
 
 ### Amazon Athena

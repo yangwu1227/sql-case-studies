@@ -4,20 +4,24 @@ import boto3
 from botocore.exceptions import NoCredentialsError, NoRegionError
 
 
-def create_session(profile_name: str, role_arn: Optional[str] = None, duration_seconds: Optional[int] = 3600) -> boto3.Session:
+def create_session(
+    profile_name: str,
+    role_arn: Optional[str] = None,
+    duration_seconds: Optional[int] = 3600,
+) -> boto3.Session:
     """
-    Create a boto3 session with the provided profile name. If an AWS role ARN is provided, the session will assume the role. There are two options for providing 
+    Create a boto3 session with the provided profile name. If an AWS role ARN is provided, the session will assume the role. There are two options for providing
     credentials:
-    
-    1. Provide the profile name containing AWS credentials stored in the ~/.aws/credentials file 
-       (e.g., access key ID, secret access key, or session token). These credentials must belong 
-       to a principal (e.g., an IAM user) that has the necessary permissions to interact with the 
+
+    1. Provide the profile name containing AWS credentials stored in the ~/.aws/credentials file
+       (e.g., access key ID, secret access key, or session token). These credentials must belong
+       to a principal (e.g., an IAM user) that has the necessary permissions to interact with the
        AWS services required by the application.
-       
-    2. Provide the AWS role ARN, in addition to the profile name, to assume, which grants the necessary 
-       permissions to interact with AWS services. If a role ARN is provided, the profile's associated 
-       principal (e.g., an IAM user) must at least have the `sts:AssumeRole` permission. Additionally, 
-       the role to be assumed must have a trust relationship with the principal that uses the profile's 
+
+    2. Provide the AWS role ARN, in addition to the profile name, to assume, which grants the necessary
+       permissions to interact with AWS services. If a role ARN is provided, the profile's associated
+       principal (e.g., an IAM user) must at least have the `sts:AssumeRole` permission. Additionally,
+       the role to be assumed must have a trust relationship with the principal that uses the profile's
        credentials.
 
     Parameters
@@ -46,21 +50,29 @@ def create_session(profile_name: str, role_arn: Optional[str] = None, duration_s
             raise NoRegionError
 
         if role_arn:
-            sts_client = session.client('sts', region_name=region_name)
+            sts_client = session.client("sts", region_name=region_name)
             # Assume role for 12 hours
-            response = sts_client.assume_role(RoleArn=role_arn, RoleSessionName='AssumeRoleSession', DurationSeconds=duration_seconds)
+            response = sts_client.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="AssumeRoleSession",
+                DurationSeconds=duration_seconds,
+            )
             return boto3.Session(
-                aws_access_key_id=response['Credentials']['AccessKeyId'],
-                aws_secret_access_key=response['Credentials']['SecretAccessKey'],
-                aws_session_token=response['Credentials']['SessionToken'],
-                region_name=region_name
+                aws_access_key_id=response["Credentials"]["AccessKeyId"],
+                aws_secret_access_key=response["Credentials"]["SecretAccessKey"],
+                aws_session_token=response["Credentials"]["SessionToken"],
+                region_name=region_name,
             )
         return session
 
     except NoRegionError:
-        print("Region not specified in the profile; please checkt the configuration e.g., ~/.aws/config")
+        print(
+            "Region not specified in the profile; please checkt the configuration e.g., ~/.aws/config"
+        )
     except NoCredentialsError:
-        print("Credentials not foundl please check the credentials file e.g., ~/.aws/credentials")
+        print(
+            "Credentials not foundl please check the credentials file e.g., ~/.aws/credentials"
+        )
     except Exception as e:
         print(f"An error occurred: {e}")
 

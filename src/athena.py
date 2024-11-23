@@ -7,21 +7,27 @@ import awswrangler as wr
 import boto3
 import pandas as pd
 
-logger = logging.getLogger(name='athena')
+logger = logging.getLogger(name="athena")
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
+
 
 class AthenaQueryError(Exception):
     """
     Custom exception class for Athena query validation errors.
     """
+
     pass
+
 
 class Athena(object):
     """
     A class to interact with AWS Athena.
     """
-    def __init__(self, boto3_session: boto3.Session, s3_output: Optional[str] = None) -> None:
+
+    def __init__(
+        self, boto3_session: boto3.Session, s3_output: Optional[str] = None
+    ) -> None:
         """
         Initialize the Athena instance.
 
@@ -48,12 +54,14 @@ class Athena(object):
         if s3_output:
             self.s3_output = s3_output  # This will trigger the setter verification
         else:
-            self.s3_output = wr.athena.create_athena_bucket(boto3_session=self.boto3_session)
+            self.s3_output = wr.athena.create_athena_bucket(
+                boto3_session=self.boto3_session
+            )
 
     @property
     def boto3_session(self) -> boto3.Session:
         return self._boto3_session
-    
+
     @boto3_session.setter
     def boto3_session(self, boto3_session: boto3.Session) -> None:
         if not isinstance(boto3_session, boto3.Session):
@@ -63,11 +71,13 @@ class Athena(object):
     @property
     def s3_output(self) -> str:
         return self._s3_output
-    
+
     @s3_output.setter
     def s3_output(self, s3_output: str) -> None:
         if not isinstance(s3_output, str) or s3_output.endswith("/"):
-            raise ValueError("s3_output must be a valid S3 path not ending with a slash")
+            raise ValueError(
+                "s3_output must be a valid S3 path not ending with a slash"
+            )
         if wr.s3.does_object_exist(path=s3_output, boto3_session=self.boto3_session):
             raise ValueError("s3_output must be a valid existing S3 path")
         self._s3_output = s3_output
@@ -106,9 +116,13 @@ class Athena(object):
         None
         """
         if query.count(";") != 1:
-            raise AthenaQueryError("Query must contain exactly one SQL statement with a single semicolon at the end")
+            raise AthenaQueryError(
+                "Query must contain exactly one SQL statement with a single semicolon at the end"
+            )
 
-    def _check_query(self, query: str, expected_start: Union[Sequence[str], str], error_message: str) -> None:
+    def _check_query(
+        self, query: str, expected_start: Union[Sequence[str], str], error_message: str
+    ) -> None:
         """
         Check if the query starts with the expected SQL statement and contains exactly one semicolon.
 
@@ -125,10 +139,12 @@ class Athena(object):
         -------
         None
         """
-        patterns = [expected_start] if isinstance(expected_start, str) else expected_start
+        patterns = (
+            [expected_start] if isinstance(expected_start, str) else expected_start
+        )
         if not any(match(pattern, query.strip(), IGNORECASE) for pattern in patterns):
             raise AthenaQueryError(error_message)
-    
+
     def _execute_query(self, database: str, query: str, **kwargs: Any) -> pd.DataFrame:
         """
         Execute a query in Athena.
@@ -149,11 +165,15 @@ class Athena(object):
         """
         try:
             response = wr.athena.start_query_execution(
-                sql=query, 
+                sql=query,
                 database=database,
                 s3_output=self.s3_output,
                 boto3_session=self.boto3_session,
-                **{k: v for k, v in kwargs.items() if k not in ['boto3_session', 's3_output']}
+                **{
+                    k: v
+                    for k, v in kwargs.items()
+                    if k not in ["boto3_session", "s3_output"]
+                },
             )
             logger.info(f"Query executed successfully")
             return response
@@ -184,7 +204,7 @@ class Athena(object):
         query = f"CREATE DATABASE IF NOT EXISTS {database};"
         self._check_single_statement(query)
         self._execute_query(query=query, database=database, **kwargs)
-        
+
     def drop_database(self, database: str, **kwargs: Dict[str, Any]) -> None:
         """
         Drop a database in Athena.
@@ -241,12 +261,18 @@ class Athena(object):
         """
         self._check_valid_identifier(database)
         self._check_single_statement(query)
-        self._check_query(query, "CREATE EXTERNAL TABLE", "Query is invalid; please use CREATE EXTERNAL TABLE to create a table")
+        self._check_query(
+            query,
+            "CREATE EXTERNAL TABLE",
+            "Query is invalid; please use CREATE EXTERNAL TABLE to create a table",
+        )
         self._execute_query(query=query, database=database, **kwargs)
 
-    def create_ctas_table(self, database: str, query: str, **kwargs: Any) -> Dict[str, Any]:
+    def create_ctas_table(
+        self, database: str, query: str, **kwargs: Any
+    ) -> Dict[str, Any]:
         """
-        Create a table in Athena using the Create Table As Select (CTAS) approach. Additional arguments can be passed to the CTAS 
+        Create a table in Athena using the Create Table As Select (CTAS) approach. Additional arguments can be passed to the CTAS
         query; the most important arguments are typically:
 
         * `ctas_table` Optional[str]: The name of the CTAS table. If None, a name with a random string is used.
@@ -262,7 +288,7 @@ class Athena(object):
 
         * `partition_info` Optional[List[str]]: A list of columns by which the CTAS table will be partitioned.
 
-        See `awswrangler.athena.create_ctas_table` for more details. 
+        See `awswrangler.athena.create_ctas_table` for more details.
 
         Parameters
         ----------
@@ -285,7 +311,7 @@ class Athena(object):
         >>>         WHERE date >= DATE '2021-01-01';
         >>>         '''
         >>> athena.create_ctas_table(
-        >>>            database='my_database', 
+        >>>            database='my_database',
         >>>            query=query,
         >>>            ctas_table='my_ctas_table',
         >>>            wait=True,
@@ -299,9 +325,15 @@ class Athena(object):
         return wr.athena.create_ctas_table(
             sql=query,
             database=database,
-            s3_output=self.s3_output if 's3_output' not in kwargs else kwargs['s3_output'],
+            s3_output=self.s3_output
+            if "s3_output" not in kwargs
+            else kwargs["s3_output"],
             boto3_session=self.boto3_session,
-            **{k: v for k,v in kwargs.items() if k not in ['boto3_session', 's3_output']}
+            **{
+                k: v
+                for k, v in kwargs.items()
+                if k not in ["boto3_session", "s3_output"]
+            },
         )
 
     def drop_table(self, database: str, table: str, **kwargs: Dict[str, Any]) -> None:
@@ -355,7 +387,11 @@ class Athena(object):
         """
         self._check_valid_identifier(database)
         self._check_single_statement(query)
-        self._check_query(query, [r'CREATE VIEW', r'CREATE OR REPLACE VIEW'], "Query is invalid; please use CREATE [ OR REPLACE ] VIEW to create a view")
+        self._check_query(
+            query,
+            [r"CREATE VIEW", r"CREATE OR REPLACE VIEW"],
+            "Query is invalid; please use CREATE [ OR REPLACE ] VIEW to create a view",
+        )
         self._execute_query(query=query, database=database, **kwargs)
 
     def drop_view(self, database: str, view: str, **kwargs: Dict[str, Any]) -> None:
@@ -385,7 +421,9 @@ class Athena(object):
         self._check_single_statement(query)
         self._execute_query(query=query, database=database, **kwargs)
 
-    def query(self, database: str, query: str, ctas_approach: bool = False, **kwargs: Any) -> pd.DataFrame:
+    def query(
+        self, database: str, query: str, ctas_approach: bool = False, **kwargs: Any
+    ) -> pd.DataFrame:
         """
         Execute a query in Athena.
 
@@ -415,11 +453,15 @@ class Athena(object):
         """
         self._check_valid_identifier(database)
         self._check_single_statement(query)
-        return wr.athena.read_sql_query( 
+        return wr.athena.read_sql_query(
             sql=query,
             database=database,
             ctas_approach=ctas_approach,
             s3_output=self.s3_output,
             boto3_session=self.boto3_session,
-            **{k: v for k,v in kwargs.items() if k not in ['boto3_session', 's3_output', 'ctas_approach']}
+            **{
+                k: v
+                for k, v in kwargs.items()
+                if k not in ["boto3_session", "s3_output", "ctas_approach"]
+            },
         )

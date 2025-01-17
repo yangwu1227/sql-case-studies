@@ -175,7 +175,7 @@ class Athena(object):
                     if k not in ["boto3_session", "s3_output"]
                 },
             )
-            logger.info(f"Query executed successfully")
+            logger.info("Query executed successfully")
             return response
         except Exception as e:
             logger.error(f"Error executing query: {e}")

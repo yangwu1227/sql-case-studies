@@ -7,7 +7,9 @@ dependencies = [
     "awswrangler>=3.10.0",
     "boto3>=1.35.68",
     "matplotlib>=3.9.2",
+    "numpy==1.26.4",
     "pandas>=2.2.3",
+    "pymc>=5.15.0",
     "scikit-posthocs>=0.10.0",
     "scipy>=1.14.1",
 ]
@@ -18,6 +20,7 @@ package = false
 [dependency-groups]
 notebook = [
     "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
 ]
 docs = [
     "mkdocs>=1.6.1",

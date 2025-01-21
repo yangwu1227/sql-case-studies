@@ -12,6 +12,7 @@ dependencies = [
     "pymc>=5.15.0",
     "scikit-posthocs>=0.10.0",
     "scipy>=1.14.1",
+    "seaborn>=0.13.2",
 ]
 
 [tool.uv]

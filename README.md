@@ -25,7 +25,7 @@ docker compose down
 The project manager used in this project is [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv sync --frozen
+uv sync --frozen --all-groups
 ```
 
 ### Amazon Athena

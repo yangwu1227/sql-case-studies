@@ -279,7 +279,7 @@ class Athena(object):
 
         * `ctas_database` Optional[str]: The name of the database where the CTAS table will be created. If None, `database` is used.
 
-        * `s3_coutput` Optional[str]: The S3 path where the CTAS table will be stored. If None, `s3_output` attribute of the current instance is used. This may not be
+        * `s3_output` Optional[str]: The S3 path where the CTAS table will be stored. If None, `s3_output` attribute of the current instance is used. This may not be
             desirable if the CTAS table is somewhat permanent and you want to store it in a different location than the query results.
 
         * `storage_format` Optional[str]: The storage format for the CTAS query results, such as ORC, PARQUET, AVRO, JSON, or TEXTFILE. PARQUET by default.

@@ -306,3 +306,83 @@ STORED AS PARQUET LOCATION 's3://sql-case-studies/data_mart/weekly_sales/' TBLPR
     'parquet.compress' = 'SNAPPY'
 );
 ```
+
+---
+
+## Balanced Tree
+
+### ERD
+
+<figure markdown="span">
+  ![Balanced Tree](assets/entity_relationship_diagrams/balanced_tree.png){ width="100%" }
+  <figcaption>Balanced Tree</figcaption>
+</figure>
+
+### DDL
+
+#### Sales
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS balanced_tree.sales (
+  prod_id VARCHAR(6) COMMENT 'Unique identifier for the product',
+  qty SMALLINT COMMENT 'Quantity of the product purchased in the transaction',
+  price SMALLINT COMMENT 'Price of the product in the transaction',
+  discount SMALLINT COMMENT 'Discount percentage applied to the product',
+  member VARCHAR(1) COMMENT 'Membership status of the buyer (e.g., t for true, f for false)',
+  txn_id VARCHAR(6) COMMENT 'Unique identifier for the transaction',
+  start_txn_time TIMESTAMP COMMENT 'Timestamp of when the transaction started'
+)
+COMMENT 'This table contains product-level transaction data, including quantities, prices, discounts, membership status, transaction IDs, and transaction timestamps'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/balanced_tree/sales/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```
+
+#### Product Details
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS balanced_tree.product_details (
+  product_id VARCHAR(6) COMMENT 'Unique identifier for the product',
+  price SMALLINT COMMENT 'Price of the product in the store',
+  product_name VARCHAR(50) COMMENT 'Name of the product',
+  category_id SMALLINT COMMENT 'Unique identifier for the category',
+  segment_id SMALLINT COMMENT 'Unique identifier for the segment',
+  style_id SMALLINT COMMENT 'Unique identifier for the style',
+  category_name VARCHAR(10) COMMENT 'Name of the category',
+  segment_name VARCHAR(10) COMMENT 'Name of the segment',
+  style_name VARCHAR(50) COMMENT 'Name of the style'
+)
+COMMENT 'The product details table includes all information about the products featured in the store'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/balanced_tree/product_details/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```
+
+#### Product Prices
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS balanced_tree.product_prices (
+  id SMALLINT COMMENT 'Unique identifier for the price record',
+  product_id VARCHAR(6) COMMENT 'Unique identifier for the product',
+  price SMALLINT COMMENT 'Price of the product in the store'
+)
+COMMENT 'This table stores the pricing information for products, including product identifiers and their corresponding prices'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/balanced_tree/product_prices/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```
+
+#### Product Hierarchy
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS balanced_tree.product_hierarchy (
+  id SMALLINT COMMENT 'Unique identifier for the entry in the hierarchy',
+  parent_id SMALLINT COMMENT 'Parent identifier for the current level (NULL for top-level categories)',
+  level_text VARCHAR(30) COMMENT 'Name or description of the hierarchy level (e.g., product type or style)',
+  level_name VARCHAR(20) COMMENT 'Name of the hierarchy level (e.g., Category, Segment, or Style)'
+)
+COMMENT 'This table represents the hierarchical structure of product categories, segments, and styles for the store, and each entry defines the relationship between levels, starting from top-level categories down to individual product styles'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/balanced_tree/product_hierarchy/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```

@@ -282,7 +282,7 @@ TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
 ### ERD
 
 <figure markdown="span">
-  ![Data Mart](assets/entity_relationship_diagrams/data_mart.png){ width="100%" }
+  ![Data Mart](assets/entity_relationship_diagrams/data_mart.png){ width="75%" }
   <figcaption>Data Mart</figcaption>
 </figure>
 
@@ -384,5 +384,46 @@ CREATE EXTERNAL TABLE IF NOT EXISTS balanced_tree.product_hierarchy (
 COMMENT 'This table represents the hierarchical structure of product categories, segments, and styles for the store, and each entry defines the relationship between levels, starting from top-level categories down to individual product styles'
 STORED AS PARQUET
 LOCATION 's3://sql-case-studies/balanced_tree/product_hierarchy/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```
+
+---
+
+## Foodie Fi
+
+### ERD
+
+<figure markdown="span">
+  ![Foodie Fi](assets/entity_relationship_diagrams/foodie_fi.png){ width="70%" }
+  <figcaption>Foodie Fi</figcaption>
+</figure>
+
+### DDL
+
+#### Plans
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS foodie_fi.plans (
+  plan_id TINYINT COMMENT 'Unique identifier for the plan',
+  plan_name VARCHAR(20) COMMENT 'Name of the subscription plan',
+  price FLOAT COMMENT 'Price of the subscription plan'
+)
+COMMENT 'The plans table contains information about the different subscription plans available, including churn events'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/foodie_fi/plans/'
+TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
+```
+
+#### Subscriptions
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS foodie_fi.subscriptions (
+  customer_id SMALLINT COMMENT 'Unique identifier for the customer',
+  plan_id TINYINT COMMENT 'Unique identifier for the plan associated with the subscription',
+  start_date DATE COMMENT 'Start date of the subscription'
+)
+COMMENT 'The subscriptions table stores information about customer subscriptions to various plans'
+STORED AS PARQUET
+LOCATION 's3://sql-case-studies/foodie_fi/subscriptions/'
 TBLPROPERTIES ('classification'='parquet', 'parquet.compress'='SNAPPY');
 ```

@@ -30,15 +30,17 @@ uv sync --frozen --all-groups
 
 ### Amazon Athena
 
-The [Athena](https://yangwu1227.github.io/sql-case-studies/athena_client/#src.athena.Athena) class can be used to interact with Amazon Athena. To use this class, the principal (i.e., IAM role) used must have the necessary permissions for [Athena](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AmazonAthenaFullAccess.html) and [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-policy-language-overview.html), if a **non-default** bucket is to be used to store the [query results](https://docs.aws.amazon.com/athena/latest/ug/querying.html#query-results-specify-location) (see below for more details).
+The [Athena](https://yangwu1227.github.io/sql-case-studies/athena_client/#src.athena.Athena) class can be used to interact with Amazon Athena. To use this client, the AWS principal (e.g., an IAM role or IAM user) used must have the necessary permissions for [Athena](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AmazonAthenaFullAccess.html).
 
-The needed permissions can be encapsulated in a [boto3 session](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/session.html) instance and passed as the first argument to the constructor of the `Athena` class. The [create_session](https://yangwu1227.github.io/sql-case-studies/utils/#src.utils.create_session) utility function can be used to create the session instance. The parameters are:
+Customized [S3](https://docs.aws.amazon.com/athena/latest/ug/s3-permissions.html) permissions are needed if a **non-default** bucket is to be used to store the [query results](https://docs.aws.amazon.com/athena/latest/ug/querying.html#query-results-specify-location) (see below for more details).
+
+The required permissions can be encapsulated in a [boto3 session](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/session.html) instance and passed as the first argument to the constructor of the `Athena` client. The [create_session](https://yangwu1227.github.io/sql-case-studies/utils/#src.utils.create_session) utility function can be used to create the session instance. The parameters are:
 
 * `profile_name`: The AWS credentials profile name to use.
 
 * `role_arn`: The IAM role ARN to assume. If provided, the `profile_name` must have the `sts:AssumeRole` permission.
 
-* `duration_seconds`: The duration, in seconds, for which the temporary credentials are valid. With [role-chaining](https://plainenglish.io/blog/aws-iam-role-chaining-walkthrough), the maximum duration is 1 hour.
+* `duration_seconds`: The duration, in seconds, for which the temporary credentials are valid. If [role-chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage-assume.html) is used, the maximum duration is 1 hour.
 
 ```python
 import boto3
@@ -50,9 +52,9 @@ boto3_session = create_session(
 )
 ```
 
-#### S3 Bucket
+### S3 Bucket
 
-The `data` parquet files for the case studies must be stored in an S3 bucket. All DDL queires are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 uris**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the console.
+The `data` parquet files for the case studies must be stored in an S3 bucket. All DDL queries are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 uris**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the console.
 
 ```bash
 # Create a bucket
@@ -61,7 +63,9 @@ $ aws s3api create-bucket --bucket sql-case-studies --profile profile-name
 $ aws s3 cp data/ s3://sql-case-studies/ --recursive --profile profile-name 
 ```
 
-Optionally, query results can be configured to be stored in a custom S3 bucket, instead of the default bucket (i.e., `aws-athena-query-results-accountid-region`). The query result S3 uri can be stored as an environment variable, e.g. `ATHENA_S3_OUTPUT=s3://bucket-name/path/to/output/`, which can then be passed as the `s3_output` argument to the `Athena` class constructor. The client creates the default bucket if the `s3_output` argument is not provided.
+Optionally, query results can be configured to be stored in a custom S3 bucket, instead of the default bucket (i.e., `aws-athena-query-results-accountid-region`).
+
+The query result S3 uri can be stored as an environment variable, e.g. `ATHENA_S3_OUTPUT=s3://bucket-name/path/to/output/`, which can then be passed as the `s3_output` argument to the `Athena` class constructor. The client creates the default bucket if the `s3_output` argument is not provided.
 
 ```python
 import os 

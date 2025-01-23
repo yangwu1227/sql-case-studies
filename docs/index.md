@@ -314,7 +314,7 @@ STORED AS PARQUET LOCATION 's3://sql-case-studies/data_mart/weekly_sales/' TBLPR
 ### ERD
 
 <figure markdown="span">
-  ![Balanced Tree](assets/entity_relationship_diagrams/balanced_tree.png){ width="100%" }
+  ![Balanced Tree](assets/entity_relationship_diagrams/balanced_tree.png){ width="95%" }
   <figcaption>Balanced Tree</figcaption>
 </figure>
 

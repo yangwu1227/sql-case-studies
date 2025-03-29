@@ -25,9 +25,25 @@ markdown_extensions:
 
 plugins:
   - search
-  - mkdocstrings 
+  - mkdocstrings
+  - mkdocs-jupyter:
+      execute: false
+      include_requirejs: true
+      custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
 
 nav:
-  - Case Studies: index.md
-  - Athena Client: athena_client.md
-  - Utils: utils.md
+  - Setup: index.md
+  - Entity Relationship Diagrams: erd.md
+  - Python API Reference:
+      - Athena Client: athena_client.md
+      - Utils: utils.md
+  - Balanced Tree: balanced_tree.ipynb
+  - Bitcoin:
+      - EDA: bitcoin_eda.ipynb
+      - Window Functions: bitcoin_window_functions.ipynb
+  - Clique Bait: clique_bait.ipynb
+  - Danny's Diner: dannys_diner.ipynb
+  - Data Bank: data_bank.ipynb
+  - Data Mart: data_mart.ipynb
+  - Foodie Fi: foodie_fi.ipynb
+  - Fresh Segments: fresh_segments.ipynb

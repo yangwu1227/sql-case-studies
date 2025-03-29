@@ -10,7 +10,7 @@ Install [docker](https://docs.docker.com/get-docker/) and [docker compose](https
 docker compose up
 ```
 
-SQLPad can accessed at [http://localhost:3000](http://localhost:3000) or the port specified in the `compose.yml` file.
+SQLPad can accessed at [http://localhost:3000](http://localhost:3000) or the port specified in the [compose.yml](https://github.com/yangwu1227/sql-case-studies/blob/main/compose.yml) file.
 
 Stop and remove the containers with:
 
@@ -40,7 +40,7 @@ The required permissions can be encapsulated in a [boto3 session](https://boto3.
 
 * `role_arn`: The IAM role ARN to assume. If provided, the `profile_name` must have the `sts:AssumeRole` permission.
 
-* `duration_seconds`: The duration, in seconds, for which the temporary credentials are valid. If [role-chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage-assume.html) is used, the maximum duration is 1 hour.
+* `duration_seconds`: The duration, in seconds, for which the temporary credentials are valid. If [role-chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#iam-term-role-chaining) occurs, the maximum duration is 1 hour.
 
 ```python
 import boto3
@@ -54,7 +54,7 @@ boto3_session = create_session(
 
 ### S3 Bucket
 
-The `data` parquet files for the case studies must be stored in an S3 bucket. All DDL queries are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 uris**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the console.
+The [data](https://github.com/yangwu1227/sql-case-studies/tree/main/data) parquet files for the case studies must be stored in an S3 bucket. All DDL queries are stored in the `sql` directory under each case study directory. **These must be adjusted to point to the correct S3 uris**. The data files can be uploaded to an S3 bucket using the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or the console.
 
 ```bash
 # Create a bucket

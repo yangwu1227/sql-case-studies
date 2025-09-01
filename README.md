@@ -22,11 +22,36 @@ docker compose down
 
 ### Virtual Environment
 
-The project manager used in this project is [uv](https://docs.astral.sh/uv/):
+The project manager used in this project is [uv](https://docs.astral.sh/uv/getting-started/installation/). There are at least three simple ways to set up the Python interpreter.
+
+#### Python Interpreter managed by `uv`
 
 ```bash
-uv sync --frozen --all-groups
+uv sync --frozen --all-groups --managed-python
 ```
+
+See documentions for [frozen](https://docs.astral.sh/uv/reference/cli/#uv-sync--frozen), [managed-python](https://docs.astral.sh/uv/reference/cli/#uv-sync--managed-python), and [all-groups](https://docs.astral.sh/uv/reference/cli/#uv-sync--all-groups).
+
+#### Python Interpreter managed by `conda`
+
+```bash
+conda search python | grep " 3\.\(12\)\."
+conda create --name sql_case_studies -y python=3.12
+conda activate sql_case_studies
+uv sync --frozen --all-groups --no-managed-python
+```
+
+#### Python Interpreter managed by `pyenv`
+
+```bash
+# List available Python versions
+pyenv install --list | grep " 3\.\(12\)\."
+# As an example, install Python 3.12.8
+pyenv install 3.12.8
+pyenv local 3.12.8
+uv sync --frozen --all-groups --no-managed-python
+```
+
 
 ### Amazon Athena
 
